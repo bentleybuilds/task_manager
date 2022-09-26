@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import initialData from "./initial-data";
+import { CssBaseline, Container } from "@mui/material";
+import Column from "./components/Column";
+import { DragDropContext } from "react-beautiful-dnd";
 
 function App() {
+  const [data, setData] = useState(initialData);
+const onDragEnd = result => {
+  // TODO: reorder the column
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <CssBaseline />
+      <Container>
+        <div className="App">
+          <DragDropContext
+          onDragEnd= {onDragEnd}
+          >
+            {data.columnOrder.map((columnId) => {
+              const column = data.columns[columnId];
+              const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
+
+              return <Column key={column.id} column={column} tasks={tasks} />;
+            })}
+          </DragDropContext>
+        </div>
+      </Container>
+    </>
   );
 }
 
