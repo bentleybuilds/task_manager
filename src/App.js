@@ -9,7 +9,23 @@ import { DragDropContext } from "react-beautiful-dnd";
 function App() {
   const [data, setData] = useState(initialData);
 const onDragEnd = result => {
+  const {destination, source, draggableId} = result
+
+  if(!destination){
+    return
+  }
   // TODO: reorder the column
+  if(destination.droppableId === source.droppableId && destination.index === source.index){
+    return
+  }
+
+  const column = data.columns[source.droppableId]
+  const newTaskIds = [...column.taskIds]
+  newTaskIds.splice(source.index, 1)
+  newTaskIds.splice(destination.index, 0, draggableId)
+
+  const newColumn = {...column, taskIds: newTaskIds}
+  setData((prevState)=>({...prevState , columns:{...prevState.columns, [newColumn.id]:newColumn}}))
 }
 
   return (
